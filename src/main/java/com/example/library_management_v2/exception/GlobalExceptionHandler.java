@@ -1,0 +1,91 @@
+// src/main/java/com/example/librarymangementv2/exception/GlobalExceptionHandler.java
+package com.example.library_management_v2.exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.HashMap;
+import java.util.Map;
+
+// Global exception handler för hela applikationen
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+
+     // Hanterar valideringsfel för @Valid annoterade parametrar
+     // ResponseEntity med valideringsfel och statuskod 400 (Bad Request)
+
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Hanterar AuthorNotFoundException
+     * @param ex Exception som kastats när en författare inte hittas
+     * @return ResponseEntity med felmeddelande och statuskod 404 (Not Found)
+     */
+
+    @ExceptionHandler(AuthorNotFoundException.class)
+    public ResponseEntity<Object> handleAuthorNotFoundException(AuthorNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Hanterar IllegalArgumentException
+     * @param ex Exception som kastats för ogiltiga argument
+     * @return ResponseEntity med felmeddelande och statuskod 400 (Bad Request)
+     */
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    /**
+     * Hanterar generella RuntimeExceptions
+     * @param ex Exception som kastats under körning
+     * @return ResponseEntity med felmeddelande och statuskod 500 (Internal Server Error)
+     */
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<Object> handleRuntimeException(RuntimeException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Hanterar alla övriga Exceptions
+     * @param ex Exception som kastats
+     * @return ResponseEntity med felmeddelande och statuskod 500 (Internal Server Error)
+     */
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleAllExceptions(Exception ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Ett oväntat fel inträffade: " + ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
