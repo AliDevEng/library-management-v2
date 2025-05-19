@@ -17,6 +17,13 @@ public interface AuthorRepository extends JpaRepository<Author, Long> {
     // Hittar författare utifrån en viss text i efternamn
     List<Author> findByLastNameContainingIgnoreCase(String lastName);
 
+    // Hitta författare baserat på förnamn, efternamn och födelseår
+    List<Author> findByFirstNameAndLastNameAndBirthYear
+    (
+            String firstName,
+            String lastName,
+            Integer birthYear
+    );
 
 
 

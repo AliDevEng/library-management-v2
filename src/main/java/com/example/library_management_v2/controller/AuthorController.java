@@ -1,14 +1,14 @@
 package com.example.library_management_v2.controller;
 
 import com.example.library_management_v2.dto.AuthorDTO;
+import com.example.library_management_v2.dto.CreateAuthorDTO;
 import com.example.library_management_v2.exception.AuthorNotFoundException;
 import com.example.library_management_v2.service.AuthorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,10 +19,8 @@ public class AuthorController {
     @Autowired
     private AuthorService authorService;
 
-    /**
-     * GET /authors - Hämtar alla författare
-     * @return Lista med alla författare som AuthorDTO
-     */
+
+    // Hämta alla författare
     @GetMapping
     public List<AuthorDTO> getAllAuthors() {
         // Anropa service-metoden för att hämta alla författare
@@ -45,5 +43,12 @@ public class AuthorController {
         } catch (IllegalArgumentException e) {
             throw e;
         }
+    }
+
+    // PostMapping för att skapa en ny författare
+
+    public AuthorDTO createAuthor(@Valid @RequestBody CreateAuthorDTO createAuthorDTO) {
+
+        return authorService.createAuthor(createAuthorDTO);
     }
 }

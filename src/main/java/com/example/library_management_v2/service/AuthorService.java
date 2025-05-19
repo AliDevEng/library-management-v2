@@ -5,6 +5,7 @@ import com.example.library_management_v2.dto.AuthorDTO;
 import com.example.library_management_v2.dto.CreateAuthorDTO;
 import com.example.library_management_v2.entity.Author;
 import com.example.library_management_v2.exception.AuthorNotFoundException;
+import com.example.library_management_v2.exception.DuplicateAuthorException;
 import com.example.library_management_v2.repository.AuthorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,20 +34,8 @@ public class AuthorService {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Konverterar en Author entity till AuthorDTO
-     * @param author Author entity att konvertera
-     * @return Konverterad AuthorDTO
-     */
-    private AuthorDTO convertToDTO(Author author) {
-        AuthorDTO dto = new AuthorDTO();
-        dto.setId(author.getId());
-        dto.setFirstName(author.getFirstName());
-        dto.setLastName(author.getLastName());
-        dto.setBirthYear(author.getBirthYear());
-        dto.setNationality(author.getNationality());
-        return dto;
-    }
+
+
 
     // Hitta författare baserat på efternamn
     public List<AuthorDTO> getAuthorsByLastName(String lastName) {
@@ -75,11 +64,21 @@ public class AuthorService {
                 .collect(Collectors.toList());
     }
 
-
+    // Skapa en ny författare
     public AuthorDTO createAuthor(CreateAuthorDTO createAuthorDTO) {
         // Validera indata (ytterligare validering utöver annotations)
         if (createAuthorDTO.getBirthYear() != null && createAuthorDTO.getBirthYear() > java.time.Year.now().getValue()) {
             throw new IllegalArgumentException("Födelseår kan inte vara i framtiden");
+        }
+
+        // Kontrollera om författaren redan finns (baserat på namn och födelseår)
+        List<Author> existingAuthors = authorRepository.findByFirstNameAndLastNameAndBirthYear(
+                createAuthorDTO.getFirstName(),
+                createAuthorDTO.getLastName(),
+                createAuthorDTO.getBirthYear());
+
+        if (!existingAuthors.isEmpty()) {
+            throw new DuplicateAuthorException("En författare med detta namn och födelseår finns redan");
         }
 
         // Konvertera DTO till entity
@@ -94,6 +93,19 @@ public class AuthorService {
 
         // Konvertera och returnera den sparade författaren som DTO
         return convertToDTO(savedAuthor);
+    }
+
+
+    // Konvertera en Author entity till AuthorDTO
+    // Return ger konverterad AuthorDTO
+    private AuthorDTO convertToDTO(Author author) {
+        AuthorDTO dto = new AuthorDTO();
+        dto.setId(author.getId());
+        dto.setFirstName(author.getFirstName());
+        dto.setLastName(author.getLastName());
+        dto.setBirthYear(author.getBirthYear());
+        dto.setNationality(author.getNationality());
+        return dto;
     }
 
 

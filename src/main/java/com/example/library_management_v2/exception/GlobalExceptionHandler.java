@@ -33,10 +33,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
+
     /**
-     * Hanterar AuthorNotFoundException
-     * @param ex Exception som kastats när en författare inte hittas
-     * @return ResponseEntity med felmeddelande och statuskod 404 (Not Found)
+     * Hantera AuthorNotFoundException
+     * ex Exception som kastas när en författare hittas inte
+     * Vi får en ResponseEntity som innehåller felmeddelande (Not Found) 404
      */
 
     @ExceptionHandler(AuthorNotFoundException.class)
@@ -49,8 +50,8 @@ public class GlobalExceptionHandler {
 
     /**
      * Hanterar IllegalArgumentException
-     * @param ex Exception som kastats för ogiltiga argument
-     * @return ResponseEntity med felmeddelande och statuskod 400 (Bad Request)
+     * ex Exception som kastas för ogiltiga argument/input
+     * Vi får i return en ResponseEntity - Bad Request 400
      */
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -63,8 +64,8 @@ public class GlobalExceptionHandler {
 
     /**
      * Hanterar generella RuntimeExceptions
-     * @param ex Exception som kastats under körning
-     * @return ResponseEntity med felmeddelande och statuskod 500 (Internal Server Error)
+     * ex Exception som kastas under Running
+     * Vi får i return en ResponseEntity - Internal Server Error 500
      */
 
     @ExceptionHandler(RuntimeException.class)
@@ -87,5 +88,13 @@ public class GlobalExceptionHandler {
         error.put("error", "Ett oväntat fel inträffade: " + ex.getMessage());
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(DuplicateAuthorException.class)
+    public ResponseEntity<Object> handleDuplicateAuthorException(DuplicateAuthorException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }
