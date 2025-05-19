@@ -17,8 +17,8 @@ public class BookController {
     private BookService bookService;
 
     /**
-     * GET /books - Hämtar alla böcker
-     * @return Lista med alla böcker som BookWithDetailsDTO
+     * Hämtar alla böcker
+     * Returnera en lista med alla böcker som BookWithDetailsDTO
      */
     @GetMapping
     public List<BookWithDetailsDTO> getAllBooks() {
@@ -26,10 +26,10 @@ public class BookController {
     }
 
     /**
-     * GET /books/search - Söker böcker baserat på titel eller författare
-     * @param title Titeln att söka efter (frivillig)
-     * @param author Författarens efternamn att söka efter (frivillig)
-     * @return Lista med matchande böcker
+     * Söker böcker baserat på titel eller författare
+     * title Titeln att söka efter (frivillig)
+     * author Författarens efternamn att söka efter (frivillig)
+     * Vi får en lista med matchande böcker
      */
     @GetMapping("/search")
     public List<BookWithDetailsDTO> searchBooks(
@@ -39,9 +39,9 @@ public class BookController {
     }
 
     /**
-     * POST /books - Skapar en ny bok
-     * @param bookDTO Data för den nya boken
-     * @return Den skapade boken som BookDTO
+     * Skapa en ny bok
+     * bookDTO Data för den nya boken
+     * Vi får den skapade boken som BookDTO
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

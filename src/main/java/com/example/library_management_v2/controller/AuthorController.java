@@ -6,6 +6,7 @@ import com.example.library_management_v2.exception.AuthorNotFoundException;
 import com.example.library_management_v2.service.AuthorService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,8 @@ public class AuthorController {
     }
 
     // PostMapping för att skapa en ny författare
-
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public AuthorDTO createAuthor(@Valid @RequestBody CreateAuthorDTO createAuthorDTO) {
 
         return authorService.createAuthor(createAuthorDTO);
