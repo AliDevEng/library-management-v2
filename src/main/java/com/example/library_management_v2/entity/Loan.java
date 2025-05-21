@@ -30,6 +30,8 @@ public class Loan {
     @Column(name = "returned_date")
     private LocalDate returnedDate;
 
+
+
     // Tom konstruktor som krävs av Spring
     public Loan() {}
 
@@ -78,6 +80,8 @@ public class Loan {
         return returnedDate;
     }
 
+
+
     public void setReturnedDate(LocalDate returnedDate) {
         this.returnedDate = returnedDate;
     }
@@ -90,5 +94,14 @@ public class Loan {
     // Hjälpmetod för att kontrollera om lånet är försenat
     public boolean isOverdue() {
         return isActive() && LocalDate.now().isAfter(dueDate);
+    }
+
+
+    public boolean isExtended() {
+
+        // Om dueDate är mer än 14 dagar efter borrowedDate, anses lånet förlängt
+
+        return borrowedDate != null && dueDate != null &&
+                dueDate.isAfter(borrowedDate.plusDays(14));
     }
 }

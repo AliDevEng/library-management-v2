@@ -18,6 +18,8 @@ public class LoanDTO {
     private boolean active;
     private boolean overdue;
 
+    private Boolean extended;
+
     // En tom konstruktor som Spring kräver
 
     public LoanDTO() {
@@ -78,6 +80,14 @@ public class LoanDTO {
 
     public void setDueDate(LocalDate dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public Boolean getExtended() {
+        return extended;
+    }
+
+    public void setExtended(Boolean extended) {
+        this.extended = extended;
     }
 
     public LocalDate getReturnedDate() {

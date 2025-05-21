@@ -1,6 +1,7 @@
 // src/main/java/com/example/librarymangementv2/exception/GlobalExceptionHandler.java
 package com.example.library_management_v2.exception;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -122,5 +123,45 @@ public class GlobalExceptionHandler {
         error.put("error", ex.getMessage());
 
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
+    }
+
+
+    // Statuskod 404 Not Found
+    @ExceptionHandler(BookNotFoundException.class)
+    public ResponseEntity<Object> handleBookNotFoundException(BookNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+
+    // Statuskod 400 Bad Request
+    @ExceptionHandler(BookNotAvailableException.class)
+    public ResponseEntity<Object> handleBookNotAvailableException(BookNotAvailableException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+
+    // Statuskod 400 Not Found
+    @ExceptionHandler(EntityNotFoundException.class)
+    public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+
+    // Statuskod 400 Bad Request
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Object> handleIllegalStateException(IllegalStateException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }
