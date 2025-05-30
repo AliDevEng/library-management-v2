@@ -1,4 +1,3 @@
-// src/main/java/com/example/librarysystem/entity/Book.java
 package com.example.library_management_v2.entity;
 
 import jakarta.persistence.*;
